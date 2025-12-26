@@ -1,0 +1,59 @@
+# Version du format docker-compose utilisé
+version: "3.9"
+
+services:
+  # -------------------------------
+  # SERVICE 1 : Base de données MongoDB
+  # -------------------------------
+  mongodb:
+    # Image officielle MongoDB version 6
+    image: mongo:6
+
+    # Nom du conteneur (facilite les commandes docker exec)
+    container_name: weather_mongo
+
+    # Redémarre automatiquement si le conteneur s'arrête
+    restart: always
+
+    # Expose MongoDB sur le port 27017 de ta machine
+    ports:
+      - "27017:27017"
+
+    # Volume persistant pour conserver les données MongoDB
+    volumes:
+      - mongo_data:/data/db
+
+  # -------------------------------
+  # SERVICE 2 : Pipeline Python
+  # -------------------------------
+  pipeline:
+    # Construit l'image à partir du Dockerfile dans ./src
+    build: ./src
+
+    # Nom du conteneur pipeline
+    container_name: weather_pipeline
+
+    # Attend que MongoDB soit démarré avant de lancer le pipeline
+    depends_on:
+      - mongodb
+
+    # Montage des volumes :
+    # - output : pour récupérer les fichiers transformés
+    # - raw : pour lire les fichiers sources
+    volumes:
+      - ./src/output:/app/output
+      - ./data/raw:/app/data/raw
+
+    # Commande exécutée automatiquement au démarrage du conteneur :
+    # 1. transform.py → transforme les données
+    # 2. load_to_mongo.py → charge les données dans MongoDB
+    command: >
+      sh -c "python3 transform.py && python3 load_to_mongo.py"
+
+# -------------------------------
+# Déclaration des volumes persistants
+# -------------------------------
+volumes:
+  # Volume pour stocker les données MongoDB de manière durable
+  mongo_data:
+
