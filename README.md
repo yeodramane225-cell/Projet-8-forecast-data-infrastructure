@@ -1,15 +1,15 @@
-🌦️ Weather Data Pipeline
+Weather Data Pipeline
 Airbyte → S3 → Transformation Python → MongoDB → Docker
 
 Ce projet met en place un pipeline complet d’ingestion, transformation, nettoyage et migration de données météorologiques issues de Weather Underground et InfoClimat, avec stockage final dans MongoDB.
 La dernière partie du projet consiste à conteneuriser l’ensemble du pipeline avec Docker.
 
-📑 Sommaire
-🎯 Objectifs du projet
+Sommaire
+Objectifs du projet
 
-🏗️ Architecture globale
+Architecture globale
 
-🧩 Partie 1 — Airbyte & Transformation Python
+Partie 1 — Airbyte & Transformation Python
 
 Ingestion Airbyte
 
@@ -21,7 +21,7 @@ Tests d’intégrité
 
 Logigramme ETL
 
-🗄️ Partie 2 — Migration MongoDB
+Partie 2 — Migration MongoDB
 
 Schéma des collections
 
@@ -31,7 +31,7 @@ Qualité post‑migration
 
 Réplication MongoDB
 
-🐳 Partie 3 — Conteneurisation Docker
+Partie 3 — Conteneurisation Docker
 
 Dockerfile
 
@@ -41,11 +41,11 @@ Exécution du pipeline
 
 Vérification dans MongoDB
 
-🧰 Environnement & Requirements
+Environnement & Requirements
 
-🏁 Conclusion
+Conclusion
 
-🎯 Objectifs du projet
+Objectifs du projet
 Ingestion automatisée de données météo (Excel + JSON) via Airbyte
 
 Stockage intermédiaire dans S3
@@ -70,7 +70,7 @@ Conteneurisation complète du pipeline avec Docker
 
 Documentation professionnelle du pipeline
 
-🏗️ Architecture globale
+Architecture globale
 Code
 Weather Underground / InfoClimat
                 │
@@ -91,8 +91,8 @@ Weather Underground / InfoClimat
                 │
                 ▼
      Contrôle qualité + CRUD
-🧩 Partie 1 — Airbyte & Transformation Python
-📥 Ingestion via Airbyte
+Partie 1 — Airbyte & Transformation Python
+Ingestion via Airbyte
 Airbyte est utilisé pour :
 
 se connecter aux fichiers Excel Weather Underground
@@ -107,7 +107,7 @@ Les données métier sont encapsulées dans :
 
 Code
 _airbyte_data
-📁 Structure du projet
+Structure du projet
 Code
 forecast_2_0/
 ├── data/
@@ -129,7 +129,7 @@ Les fichiers transformés sont générés dans :
 
 Code
 src/output/
-🔧 Transformation Python
+Transformation Python
 Le script transform.py réalise :
 
 extraction des données métier depuis _airbyte_data
@@ -148,7 +148,7 @@ stations.jsonl
 
 stations_infoclimat.jsonl
 
-🧪 Tests d’intégrité
+Tests d’intégrité
 Le script quality.py vérifie :
 
 présence des colonnes attendues
@@ -161,7 +161,7 @@ doublons
 
 cohérence des formats
 
-🔄 Logigramme ETL
+Logigramme ETL
 Code
           [Début]
               |
@@ -189,8 +189,8 @@ Code
               |
               v
              [Fin]
-🗄️ Partie 2 — Migration MongoDB
-📚 Schéma des collections
+Partie 2 — Migration MongoDB
+Schéma des collections
 measurements
 datetime
 
@@ -230,7 +230,7 @@ latitude
 
 longitude
 
-🚚 Migration des données
+Migration des données
 Le script load_to_mongo.py :
 
 lit les fichiers JSONL transformés
@@ -241,7 +241,7 @@ insère les documents dans MongoDB
 
 supprime les champs techniques Airbyte
 
-🔍 Opérations CRUD
+Opérations CRUD
 Les scripts Python permettent :
 
 Create : insertion des documents
@@ -252,7 +252,7 @@ Update : enrichissement, conversions
 
 Delete : suppression des champs inutiles
 
-📊 Qualité post‑migration
+Qualité post‑migration
 Le script quality_mongo.py vérifie :
 
 nombre total de documents
@@ -263,7 +263,7 @@ cohérence des types
 
 conformité du schéma
 
-🛡️ Réplication MongoDB
+Réplication MongoDB
 Un replica set local a été mis en place :
 
 nom : rs0
@@ -280,8 +280,8 @@ assurer une tolérance aux pannes
 
 démontrer la réplication MongoDB
 
-🐳 Partie 3 — Conteneurisation Docker
-🎯 Objectifs
+Partie 3 — Conteneurisation Docker
+Objectifs
 Conteneuriser le pipeline Python
 
 Déployer MongoDB dans un conteneur dédié
@@ -290,7 +290,7 @@ Automatiser l’exécution complète via docker-compose
 
 Garantir la reproductibilité du pipeline
 
-📦 Dockerfile (conteneur pipeline Python)
+Dockerfile (conteneur pipeline Python)
 Situé dans src/Dockerfile :
 
 dockerfile
@@ -303,7 +303,7 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["python3", "transform.py"]
-🐳 docker-compose.yml (orchestration complète)
+docker-compose.yml (orchestration complète)
 Situé à la racine :
 
 yaml
@@ -332,7 +332,7 @@ services:
 
 volumes:
   mongo_data:
-🚀 Exécution du pipeline Docker
+Exécution du pipeline Docker
 Depuis la racine du projet :
 
 Code
@@ -345,7 +345,7 @@ génération des fichiers JSONL
 
 insertion dans MongoDB
 
-🔍 Vérification dans MongoDB
+Vérification dans MongoDB
 Code
 docker exec -it weather_mongo mongosh
 use weather_db
@@ -360,7 +360,7 @@ measurements : 3807
 
 stations_infoclimat : 4
 
-🧰 Environnement & Requirements
+Environnement & Requirements
 Dépendances principales :
 
 pandas
@@ -373,7 +373,7 @@ boto3
 
 python-dotenv
 
-🏁 Conclusion
+Conclusion
 Ce projet couvre l’ensemble du cycle de vie d’un pipeline de données :
 
 ingestion et standardisation via Airbyte
